@@ -1,8 +1,17 @@
-import readline from 'readline';
+import csv from 'csvtojson';
+import fs from 'fs';
 
-readline.createInterface({
-    input: process.stdin,    
-}).on('line', (input) => {
-    console.log(input.split('').reverse().join(''));
-    console.log("");
-});
+const csvFilePath = './csv/task1-2.csv';
+const textFilePath = './result/task1-2.txt';
+
+const readStream = fs.createReadStream(csvFilePath);
+
+const writeStream = fs.createWriteStream(textFilePath);
+
+const errorHandler = (err) => { console.log(err); }
+
+readStream.on('error', errorHandler);
+writeStream.on('error', errorHandler);
+csv().on('error', errorHandler);
+
+readStream.pipe(csv()).pipe(writeStream);
